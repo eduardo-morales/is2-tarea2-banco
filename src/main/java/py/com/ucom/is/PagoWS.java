@@ -1,13 +1,21 @@
 package py.com.ucom.is;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+
+import py.com.ucom.is.dao.Cuenta;
+import py.com.ucom.is.dao.Pago;
 
 @WebService
-public class PagoService {
+public class PagoWS {
 
 	@WebMethod
 	public String registrarCliente(@WebParam(name = "cedula") String cedula,
@@ -16,7 +24,7 @@ public class PagoService {
 		
 		BaseDatosMemoria bd = BaseDatosMemoria.getInstancia();
 		
-		CuentaRegistro cuenta = new CuentaRegistro();
+		Cuenta cuenta = new Cuenta();
 		cuenta.setCedula(cedula);
 		cuenta.setCuenta(numeroCuenta);
 			
@@ -27,16 +35,16 @@ public class PagoService {
 		
 		return "Registro insertado con éxito";
 		
-		//PagoServiceRetorno retorno = new PagoServiceRetorno(true, 0, "EXITO");
+		//PagoRetorno retorno = new PagoRetorno(true, 0, "EXITO");
 		//return retorno;
 	}
 	
 	@WebMethod
-	public ArrayList<CuentaRegistro> listarCuentas() {
+	public ArrayList<Cuenta> listarCuentas() {
 
 		
 		BaseDatosMemoria bd = BaseDatosMemoria.getInstancia();
-		ArrayList<CuentaRegistro> cuentas = bd.getCuentaRegistros();
+		ArrayList<Cuenta> cuentas = bd.getCuentaRegistros();
 		
 		return cuentas;
 	}
@@ -53,7 +61,7 @@ public class PagoService {
 		
 		BaseDatosMemoria bd = BaseDatosMemoria.getInstancia();
 	
-		PagoRegistro pago = new PagoRegistro();
+		Pago pago = new Pago();
 		pago.setCedula(cedula);
 		pago.setCuenta(numeroCuenta);
 		pago.setMoneda(moneda);
@@ -73,13 +81,16 @@ public class PagoService {
 	
 }
 
-
-class PagoServiceRetorno {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "PagoRetorno")
+class PagoRetorno implements Serializable{
 	Boolean exito;
 	Integer codigoError;
 	String errorDescipcion;
 	
-	public PagoServiceRetorno(Boolean exito, Integer codigoError, String errorDescipcion) {
+	
+	
+	public PagoRetorno(Boolean exito, Integer codigoError, String errorDescipcion) {
 		super();
 		this.exito = exito;
 		this.codigoError = codigoError;

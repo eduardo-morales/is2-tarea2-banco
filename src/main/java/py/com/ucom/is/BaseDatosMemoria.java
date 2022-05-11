@@ -3,11 +3,14 @@ package py.com.ucom.is;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import py.com.ucom.is.dao.Cuenta;
+import py.com.ucom.is.dao.Pago;
+
 public class BaseDatosMemoria {
 
 	private static BaseDatosMemoria bd = null;
-	private static ArrayList<CuentaRegistro> cuentaRegistroTabla = new ArrayList<CuentaRegistro>();
-	private static ArrayList<PagoRegistro> pagoTabla = new ArrayList<PagoRegistro>();
+	private static ArrayList<Cuenta> cuentaRegistroTabla = new ArrayList<Cuenta>();
+	private static ArrayList<Pago> pagoTabla = new ArrayList<Pago>();
 	
 	public static BaseDatosMemoria getInstancia() {
 		if(bd == null) {
@@ -16,9 +19,9 @@ public class BaseDatosMemoria {
 		return bd;
 	}
 	
-    public int insertarCuentaRegistro(CuentaRegistro registro) {
+    public int insertarCuentaRegistro(Cuenta registro) {
     	//validar que no se repita cedula o numero de cuenta
-    	for (CuentaRegistro registroGuardado : cuentaRegistroTabla) {
+    	for (Cuenta registroGuardado : cuentaRegistroTabla) {
 			if(registroGuardado.getCedula().equalsIgnoreCase(registro.getCedula())
 					&& registroGuardado.getCuenta().intValue()== registro.getCuenta().intValue()) {
 				
@@ -30,13 +33,13 @@ public class BaseDatosMemoria {
     	return 0;
     }
     
-    public ArrayList<CuentaRegistro> getCuentaRegistros() {
+    public ArrayList<Cuenta> getCuentaRegistros() {
     	return cuentaRegistroTabla;
     }
 	
-    public int insertarPago(PagoRegistro pago) {
+    public int insertarPago(Pago pago) {
     	Boolean valido = false;
-		for (CuentaRegistro registroGuardado : cuentaRegistroTabla) {
+		for (Cuenta registroGuardado : cuentaRegistroTabla) {
 			if(registroGuardado.getCedula().equalsIgnoreCase(pago.getCedula())
 					&& registroGuardado.getCuenta().intValue()== pago.getCuenta().intValue()) {
 				

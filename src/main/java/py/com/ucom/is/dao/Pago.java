@@ -1,6 +1,6 @@
-package py.com.ucom.is;
+package py.com.ucom.is.dao;
 
-public class PagoRegistro {
+public class Pago {
 
 	private String cedula;
 	private Integer cuenta;
