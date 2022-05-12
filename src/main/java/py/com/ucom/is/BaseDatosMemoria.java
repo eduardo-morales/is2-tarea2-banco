@@ -36,22 +36,80 @@ public class BaseDatosMemoria {
 	public ArrayList<Cuenta> getCuentaRegistros() {
 		return cuentaRegistroTabla;
 	}
+	
+	public ConsultaPagoResponse consultarPago(Integer nroFactura) {
+		ConsultaPagoResponse rsp = new ConsultaPagoResponse();
+		rsp.setEstado("NO_PAGADO");
+		
+		for (Pago registroPago : pagoTabla) {
+			if(registroPago.getNumeroFactura().intValue()==nroFactura.intValue()) {
+				rsp.setEstado("PAGADO");
+				break;
+			}
+		}
+		
+		return rsp;
+		
+	}
+	
+	
 
-	public int insertarPago(Pago pago) {
+	public Respuesta insertarPago(Pago pago) {
 		Boolean valido = false;
+		Respuesta rsp = new Respuesta(true,0, "Pago realizado con exito");
+		
+		//valida que la cuenta existe
 		for (Cuenta registroGuardado : cuentaRegistroTabla) {
 			if (registroGuardado.getCedula().equalsIgnoreCase(pago.getCedula())
 					&& registroGuardado.getCuenta().intValue() == pago.getCuenta().intValue()) {
 
 				valido = true;
+				break;
 			}
 		}
 		if (!valido) {
-			return 1000;
-
+			rsp.setExito(false);
+			rsp.setCodigoError(1000);
+			rsp.setDescripionMensaje("Persona no registrada");
+			return rsp;
+		}
+		
+		//busca factura ya pagada
+		for (Pago registroGuardado : pagoTabla) {
+			if(registroGuardado.getNumeroFactura().intValue()==pago.getNumeroFactura().intValue()) {
+				valido = false;
+				break;
+			}
+		}
+		
+		
+		if (!valido) {
+			rsp.setExito(false);
+			rsp.setCodigoError(2000);
+			rsp.setDescripionMensaje("Pago ya realizado");
+			return rsp;
 		}
 
 		pagoTabla.add(pago);
-		return 0;
+		return rsp;
 	}
+}
+
+class ConsultaPagoResponse{
+	private String estado;
+	private String fechaProceso;
+	
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	public String getFechaProceso() {
+		return fechaProceso;
+	}
+	public void setFechaProceso(String fechaProceso) {
+		this.fechaProceso = fechaProceso;
+	}
+	
 }
